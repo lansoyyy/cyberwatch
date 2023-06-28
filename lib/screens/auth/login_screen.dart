@@ -48,46 +48,50 @@ class LoginScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    height: 400,
-                    width: 500,
-                    decoration: BoxDecoration(
-                      color: primary.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextBold(
-                          text: 'Login',
-                          fontSize: 48,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFieldWidget(
-                            label: 'Username', controller: usernameController),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFieldWidget(
-                            isObscure: true,
-                            label: 'Password',
-                            controller: passwordController),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        ButtonWidget(
-                          radius: 10,
-                          height: 60,
-                          textColor: Colors.white,
-                          color: Colors.black,
-                          label: 'Login',
-                          onPressed: () {},
-                        ),
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 50),
+                    child: Container(
+                      height: 400,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        color: primary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextBold(
+                            text: 'Login',
+                            fontSize: 48,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFieldWidget(
+                              label: 'Username',
+                              controller: usernameController),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFieldWidget(
+                              isObscure: true,
+                              label: 'Password',
+                              controller: passwordController),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          ButtonWidget(
+                            radius: 10,
+                            height: 60,
+                            textColor: Colors.white,
+                            color: Colors.black,
+                            label: 'Login',
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
