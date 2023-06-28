@@ -2,7 +2,10 @@ import 'package:cyberwatch/utils/colors.dart';
 import 'package:cyberwatch/widgets/button_widget.dart';
 import 'package:cyberwatch/widgets/text_widget.dart';
 import 'package:cyberwatch/widgets/textfield_widget.dart';
+import 'package:cyberwatch/widgets/toast_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -88,7 +91,17 @@ class LoginScreen extends StatelessWidget {
                             textColor: Colors.white,
                             color: Colors.black,
                             label: 'Login',
-                            onPressed: () {},
+                            onPressed: () {
+                              if (usernameController.text == 'username' &&
+                                  passwordController.text == 'password') {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeScreen()));
+                              } else {
+                                showToast('INVALID ACCOUNT!');
+                              }
+                            },
                           ),
                         ],
                       ),
