@@ -27,7 +27,7 @@ class TextFieldWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextRegular(text: label, fontSize: 12, color: Colors.white),
+        TextRegular(text: label, fontSize: 14, color: Colors.white),
         const SizedBox(
           height: 5,
         ),
