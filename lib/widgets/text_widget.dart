@@ -6,6 +6,7 @@ class TextRegular extends StatelessWidget {
   late Color color;
 
   TextRegular({
+    super.key,
     required this.text,
     required this.fontSize,
     required this.color,
@@ -27,6 +28,7 @@ class TextBold extends StatelessWidget {
   late Color color;
 
   TextBold({
+    super.key,
     required this.text,
     required this.fontSize,
     required this.color,
@@ -36,7 +38,11 @@ class TextBold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize, color: color, fontFamily: 'QBold'),
+      style: TextStyle(
+          fontSize: fontSize,
+          color: color,
+          fontFamily: 'QBold',
+          fontWeight: FontWeight.w900),
     );
   }
 }
