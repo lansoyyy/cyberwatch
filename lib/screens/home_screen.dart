@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cyberwatch/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String nameSearched = '';
   final searchController = TextEditingController();
   int dropValue = 0;
+  String station = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,34 +64,65 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           width: 20,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 25, right: 25),
-                            child: DropdownButton(
-                                value: dropValue,
-                                underline: const SizedBox(),
-                                items: [
-                                  for (int i = 0; i < 5; i++)
-                                    DropdownMenuItem(
-                                      value: i,
-                                      child: TextRegular(
-                                        text: 'Station $i',
-                                        fontSize: 14,
-                                        color: primary,
-                                      ),
-                                    ),
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    dropValue = int.parse(value.toString());
-                                  });
-                                }),
-                          ),
-                        ),
+                        StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('Stations')
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return const Center(child: Text('Error'));
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Padding(
+                                  padding: EdgeInsets.only(top: 50),
+                                  child: Center(
+                                      child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                  )),
+                                );
+                              }
+
+                              final data = snapshot.requireData;
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 25, right: 25),
+                                  child: DropdownButton(
+                                      value: dropValue,
+                                      underline: const SizedBox(),
+                                      items: [
+                                        for (int i = 0;
+                                            i < data.docs.length;
+                                            i++)
+                                          DropdownMenuItem(
+                                            onTap: () {
+                                              setState(() {
+                                                station = data.docs[i]['name'];
+                                              });
+                                            },
+                                            value: i,
+                                            child: TextRegular(
+                                              text: data.docs[i]['name'],
+                                              fontSize: 14,
+                                              color: primary,
+                                            ),
+                                          ),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          dropValue =
+                                              int.parse(value.toString());
+                                        });
+                                      }),
+                                ),
+                              );
+                            }),
                         const SizedBox(
                           width: 50,
                         ),
@@ -101,22 +134,66 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     child: Stack(
                       children: [
-                        FlutterMap(
-                          options: MapOptions(
-                            center: LatLng(8.477217, 124.645920),
-                            zoom: 16.0,
-                          ),
-                          children: [
-                            TileLayer(
-                              urlTemplate:
-                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              userAgentPackageName: 'com.example.app',
-                            ),
-                            MarkerLayer(
-                              markers: myMarkers,
-                            ),
-                          ],
-                        ),
+                        StreamBuilder<QuerySnapshot>(
+                            stream: station == ''
+                                ? FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .snapshots()
+                                : FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .where('station', isEqualTo: station)
+                                    .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return const Center(child: Text('Error'));
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Padding(
+                                  padding: EdgeInsets.only(top: 50),
+                                  child: Center(
+                                      child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                  )),
+                                );
+                              }
+
+                              final data = snapshot.requireData;
+                              return FlutterMap(
+                                options: MapOptions(
+                                  center: LatLng(8.477217, 124.645920),
+                                  zoom: 16.0,
+                                ),
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName: 'com.example.app',
+                                  ),
+                                  MarkerLayer(
+                                    markers: myMarkers,
+                                  ),
+                                  CircleLayer(
+                                    circles: [
+                                      for (int i = 0; i < data.docs.length; i++)
+                                        CircleMarker(
+                                          radius: 12.5,
+                                          borderStrokeWidth: 1,
+                                          borderColor: Colors.black,
+                                          useRadiusInMeter: true,
+                                          color: Colors.blue,
+                                          point: LatLng(
+                                              data.docs[i]['location'][0]
+                                                  ['lat'],
+                                              data.docs[i]['location'][0]
+                                                  ['long']),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }),
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 50, right: 50, top: 20),
