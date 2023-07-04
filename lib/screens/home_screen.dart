@@ -3,7 +3,7 @@ import 'package:cyberwatch/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:intl/intl.dart' show DateFormat, toBeginningOfSentenceCase;
 import '../widgets/text_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,6 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Marker> myMarkers = [];
+
+  final mapController = MapController();
 
   bool hasLoaded = true;
   String nameSearched = '';
@@ -161,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               final data = snapshot.requireData;
                               return FlutterMap(
+                                mapController: mapController,
                                 options: MapOptions(
                                   center: LatLng(8.477217, 124.645920),
                                   zoom: 16.0,
@@ -197,33 +200,130 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 50, right: 50, top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 45,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: TextFormField(
-                                  onChanged: (value) {
-                                    setState(() {
-                                      nameSearched = value;
-                                    });
-                                  },
-                                  decoration: const InputDecoration(
-                                      hintText: 'Search officer',
-                                      suffixIcon: Icon(Icons.search),
-                                      hintStyle:
-                                          TextStyle(fontFamily: 'QRegular'),
-                                      prefixIcon: Icon(
-                                        Icons.local_police_outlined,
-                                        color: Colors.black,
-                                      )),
-                                  controller: searchController,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 45,
+                                    width: 300,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          nameSearched = value;
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                          hintText: 'Search officer',
+                                          suffixIcon: Icon(Icons.search),
+                                          hintStyle:
+                                              TextStyle(fontFamily: 'QRegular'),
+                                          prefixIcon: Icon(
+                                            Icons.local_police_outlined,
+                                            color: Colors.black,
+                                          )),
+                                      controller: searchController,
+                                    ),
+                                  ),
+                                ],
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              nameSearched != ''
+                                  ? StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .where('name',
+                                              isGreaterThanOrEqualTo:
+                                                  toBeginningOfSentenceCase(
+                                                      nameSearched))
+                                          .where('name',
+                                              isLessThan:
+                                                  '${toBeginningOfSentenceCase(nameSearched)}z')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (snapshot.hasError) {
+                                          return const Center(
+                                              child: Text('Error'));
+                                        }
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Padding(
+                                            padding: EdgeInsets.only(top: 50),
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                              color: Colors.black,
+                                            )),
+                                          );
+                                        }
+
+                                        final data = snapshot.requireData;
+                                        return Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                          ),
+                                          width: 300,
+                                          height:
+                                              data.docs.isNotEmpty ? 125 : 75,
+                                          child: data.docs.isNotEmpty
+                                              ? ListView.separated(
+                                                  separatorBuilder:
+                                                      (context, index) {
+                                                    return const Divider();
+                                                  },
+                                                  itemCount: data.docs.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return ListTile(
+                                                      onTap: () {
+                                                        mapController.move(
+                                                            LatLng(
+                                                                data.docs[index]
+                                                                        [
+                                                                        'location']
+                                                                    [0]['lat'],
+                                                                data.docs[index]
+                                                                        [
+                                                                        'location']
+                                                                    [
+                                                                    0]['long']),
+                                                            18);
+                                                      },
+                                                      title: TextBold(
+                                                          text: data.docs[index]
+                                                              ['name'],
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                      subtitle: TextBold(
+                                                          text: data.docs[index]
+                                                              ['contactNumber'],
+                                                          fontSize: 12,
+                                                          color: Colors.grey),
+                                                      trailing: const Icon(
+                                                        Icons
+                                                            .arrow_forward_ios_rounded,
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : Center(
+                                                  child: TextBold(
+                                                      text: 'No Result',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                        );
+                                      })
+                                  : const SizedBox(),
                             ],
                           ),
                         ),
