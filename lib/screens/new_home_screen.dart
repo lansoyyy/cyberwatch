@@ -26,91 +26,206 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 80,
-            color: primary,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/images/logo.png',
-                    height: 80,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 80,
+              color: primary,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo.png',
+                      height: 80,
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    TextBold(
+                      text: 'SentiNex',
+                      fontSize: 38,
+                      color: Colors.white,
+                    ),
+                    const Expanded(
+                      child: SizedBox(),
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: TabBar(
+                labelStyle: const TextStyle(
+                  color: Colors.red,
+                ),
+                tabs: [
+                  Tab(
+                    child:
+                        TextBold(text: 'Map', fontSize: 18, color: Colors.blue),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  TextBold(
-                    text: 'SentiNex',
-                    fontSize: 38,
-                    color: Colors.white,
-                  ),
-                  const Expanded(
-                    child: SizedBox(),
-                  ),
-                  const SizedBox(
-                    width: 50,
+                  Tab(
+                    child: TextBold(
+                        text: 'Logs', fontSize: 18, color: Colors.blue),
                   ),
                 ],
               ),
             ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              mapWidget(),
-              SizedBox(
-                width: 350,
-                height: 700,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextRegular(
-                                  text: 'Station',
-                                  fontSize: 18,
-                                  color: Colors.black),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                            ],
+            Expanded(
+              child: SizedBox(
+                child: TabBarView(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        mapWidget(),
+                        SizedBox(
+                          width: 375,
+                          height: 700,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextRegular(
+                                            text: 'Station',
+                                            fontSize: 18,
+                                            color: Colors.black),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          height: 35,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            border: Border.all(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: TextRegular(
+                                                text: 'Station 1',
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextRegular(
+                                            text: 'Patrol',
+                                            fontSize: 18,
+                                            color: Colors.black),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          height: 35,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            border: Border.all(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: TextRegular(
+                                                text: 'Patrol 1',
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      for (int i = 0; i < 4; i++)
+                                        Container(
+                                          height: 105,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 20, 10, 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextBold(
+                                                    text: 'John Doe',
+                                                    fontSize: 18,
+                                                    color: Colors.black),
+                                                const SizedBox(
+                                                  height: 2,
+                                                ),
+                                                TextRegular(
+                                                    text: 'Lorem Ipsum',
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                                const SizedBox(
+                                                  height: 2,
+                                                ),
+                                                TextRegular(
+                                                    text: 'Lorem Ipsum',
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextRegular(
-                                  text: 'Patrol',
-                                  fontSize: 18,
-                                  color: Colors.black),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
