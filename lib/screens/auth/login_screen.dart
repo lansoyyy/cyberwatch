@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                           height: 250,
                         ),
                         TextBold(
-                          text: 'Cyberwatch',
+                          text: 'SentiNex',
                           fontSize: 80,
                           color: Colors.white,
                         ),
