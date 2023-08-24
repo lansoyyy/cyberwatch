@@ -260,6 +260,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                   }
 
                   final data = snapshot.requireData;
+
+                  GeoPoint geoPoint = data.docs[0]['location'];
+
                   return FlutterMap(
                     mapController: mapController,
                     options: MapOptions(
@@ -275,23 +278,20 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                       MarkerLayer(
                         markers: myMarkers,
                       ),
-                      // CircleLayer(
-                      //   circles: [
-                      //     for (int i = 0; i < data.docs.length; i++)
-                      //       CircleMarker(
-                      //         radius: 12.5,
-                      //         borderStrokeWidth: 1,
-                      //         borderColor: Colors.black,
-                      //         useRadiusInMeter: true,
-                      //         color: Colors.blue,
-                      //         point: LatLng(
-                      //             data.docs[i]['location'][0]
-                      //                 ['lat'],
-                      //             data.docs[i]['location'][0]
-                      //                 ['long']),
-                      //       ),
-                      //   ],
-                      // ),
+                      CircleLayer(
+                        circles: [
+                          for (int i = 0; i < data.docs.length; i++)
+                            CircleMarker(
+                              radius: 25,
+                              borderStrokeWidth: 2,
+                              borderColor: Colors.black,
+                              useRadiusInMeter: true,
+                              color: Colors.blue,
+                              point:
+                                  LatLng(geoPoint.latitude, geoPoint.longitude),
+                            ),
+                        ],
+                      ),
                     ],
                   );
                 }),

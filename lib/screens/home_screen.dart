@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               i < data.docs.length;
                                               i++)
                                             CircleMarker(
-                                              radius: 12.5,
+                                              radius: 100,
                                               borderStrokeWidth: 1,
                                               borderColor: Colors.black,
                                               useRadiusInMeter: true,
