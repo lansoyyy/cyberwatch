@@ -78,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .snapshots()
                                     : FirebaseFirestore.instance
                                         .collection('Users')
-                                        .where('station', isEqualTo: station)
                                         .snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -97,6 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
 
                                   final data = snapshot.requireData;
+
+                                  print('Location ${data.docs[0]['location']}');
                                   return FlutterMap(
                                     mapController: mapController,
                                     options: MapOptions(
@@ -269,11 +270,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-                            
                           ],
                         ),
                       ),
-                      
                     ],
                   ),
                 ),
