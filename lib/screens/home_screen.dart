@@ -97,7 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                   final data = snapshot.requireData;
 
-                                  print('Location ${data.docs[0]['location']}');
                                   return FlutterMap(
                                     mapController: mapController,
                                     options: MapOptions(
@@ -113,23 +112,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MarkerLayer(
                                         markers: myMarkers,
                                       ),
-                                      // CircleLayer(
-                                      //   circles: [
-                                      //     for (int i = 0; i < data.docs.length; i++)
-                                      //       CircleMarker(
-                                      //         radius: 12.5,
-                                      //         borderStrokeWidth: 1,
-                                      //         borderColor: Colors.black,
-                                      //         useRadiusInMeter: true,
-                                      //         color: Colors.blue,
-                                      //         point: LatLng(
-                                      //             data.docs[i]['location'][0]
-                                      //                 ['lat'],
-                                      //             data.docs[i]['location'][0]
-                                      //                 ['long']),
-                                      //       ),
-                                      //   ],
-                                      // ),
+                                      CircleLayer(
+                                        circles: [
+                                          for (int i = 0;
+                                              i < data.docs.length;
+                                              i++)
+                                            CircleMarker(
+                                              radius: 12.5,
+                                              borderStrokeWidth: 1,
+                                              borderColor: Colors.black,
+                                              useRadiusInMeter: true,
+                                              color: Colors.blue,
+                                              point: LatLng(
+                                                  data.docs[i]['location']
+                                                      .geopoint.latitude,
+                                                  data.docs[i]['location']
+                                                      .geopoint.longitude),
+                                            ),
+                                        ],
+                                      ),
                                     ],
                                   );
                                 }),
