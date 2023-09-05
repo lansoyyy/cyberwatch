@@ -164,55 +164,90 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      for (int i = 0; i < 4; i++)
-                                        Container(
-                                          height: 105,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 20, 10, 20),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                TextBold(
-                                                    text: 'John Doe',
-                                                    fontSize: 18,
-                                                    color: Colors.black),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                                TextRegular(
-                                                    text: 'Lorem Ipsum',
-                                                    fontSize: 14,
-                                                    color: Colors.black),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                                TextRegular(
-                                                    text: 'Lorem Ipsum',
-                                                    fontSize: 14,
-                                                    color: Colors.black),
-                                              ],
-                                            ),
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('Users')
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Center(
+                                            child: Text('Error'));
+                                      }
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Padding(
+                                          padding: EdgeInsets.only(top: 50),
+                                          child: Center(
+                                              child: CircularProgressIndicator(
+                                            color: Colors.black,
+                                          )),
+                                        );
+                                      }
+
+                                      final data = snapshot.requireData;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black,
                                           ),
                                         ),
-                                    ],
-                                  ),
-                                ),
+                                        child: Column(
+                                          children: [
+                                            for (int i = 0;
+                                                i < data.docs.length;
+                                                i++)
+                                              Container(
+                                                height: 105,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 20, 10, 20),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      TextBold(
+                                                          text: data.docs[i]
+                                                              ['name'],
+                                                          fontSize: 18,
+                                                          color: Colors.black),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      TextRegular(
+                                                          text: data.docs[i]
+                                                              ['status'],
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      TextRegular(
+                                                          text: DateFormat
+                                                                  .yMMMd()
+                                                              .add_jm()
+                                                              .format(data
+                                                                  .docs[i][
+                                                                      'timestamp']
+                                                                  .toDate()),
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
                               ],
                             ),
                           ),
